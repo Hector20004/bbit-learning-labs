@@ -31,9 +31,13 @@ class mqConsumer(mqConsumerInterface):
 		self.channel = self.connection.channel()
 
 		self.channel.queue_declare(queue=self.queue_name)
-	
+		self.channel.queue_bind(
+    	queue= self.queue_name,
+    routing_key= self.binding_key,
+    exchange=self.exchange_name,
+	)
 	def startConsuming(self) -> None:
-		self.channel.basic_consume(queue=self.queue_name,on_message_callback=self.on_message_callback)
+		self.channel.basic_consume(queue=self.queue_name,on_message_callback=self.on_message_callback,auto_ack=False)
 		
 	def Del(self):
 		self.channel.close()

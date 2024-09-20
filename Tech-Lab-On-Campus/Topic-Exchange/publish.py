@@ -14,16 +14,24 @@
 
 import argparse
 import sys
+import pika
+import os
 
 from solution.producer_sol import mqProducer  # pylint: disable=import-error
 
 
 def main(ticker: str, price: float, sector: str) -> None:
     
-    # Implement Logic to Create Routing Key from the ticker and sector variable -  Step 2
-    #
-    #                       WRITE CODE HERE!!!
-    #
+    con_params = pika.URLParameters(os.environ["AMQP_URL"])
+    connection = pika.BlockingConnection(parameters=con_params)
+    channel = connection.channel()
+
+    # Declare the topic exchange
+    channel.exchange_declare(exchange='topic_logs', exchange_type='topic')
+
+    # Set the routing key and publish a message with that topic exchange:
+    routingKey = f"#.{sector}.#"
+    
 
 
     producer = mqProducer(routing_key=routingKey,exchange_name="Tech Lab Topic Exchange")
@@ -33,15 +41,20 @@ def main(ticker: str, price: float, sector: str) -> None:
     #
     #                       WRITE CODE HERE!!!
     #
+
+    message = ticker + " is " + price + " " + sector 
+    channel.basic_publish(
+    exchange='topic_logs', routing_key=routingKey, body=message)
+    
+    print(f" [x] Sent {routingKey}:{message}")
     
     
     producer.publishOrder(message)
 
 if __name__ == "__main__":
 
-    # Implement Logic to read the ticker, price and sector string from the command line and save them - Step 1
-    #
-    #                       WRITE CODE HERE!!!
-    #
+    ticker = sys.argv[1]
+    price = sys.argv[2]
+    sector = sys.argv[3]
 
     sys.exit(main(ticker,price,sector))

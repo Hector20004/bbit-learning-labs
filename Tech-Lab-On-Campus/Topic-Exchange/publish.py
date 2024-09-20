@@ -27,7 +27,7 @@ def main(ticker: str, price: float, sector: str) -> None:
     channel = connection.channel()
 
     # Declare the topic exchange
-    channel.exchange_declare(exchange='topic_logs', exchange_type='topic')
+    channel.exchange_declare(exchange="Tech Lab Topic Exchange", exchange_type='topic')
 
     # Set the routing key and publish a message with that topic exchange:
     routingKey = f"#.{sector}.#"
@@ -44,7 +44,7 @@ def main(ticker: str, price: float, sector: str) -> None:
 
     message = ticker + " is " + price + " " + sector 
     channel.basic_publish(
-    exchange='topic_logs', routing_key=routingKey, body=message)
+    exchange="Tech Lab Topic Exchang", routing_key=routingKey, body=message)
     
     print(f" [x] Sent {routingKey}:{message}")
     

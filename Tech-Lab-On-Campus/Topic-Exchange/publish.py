@@ -42,7 +42,7 @@ def main(ticker: str, price: float, sector: str) -> None:
     #                       WRITE CODE HERE!!!
     #
 
-    message = ticker + " is " + price + " " + sector 
+    message = ticker + " is $" + price 
     channel.basic_publish(
     exchange="Tech Lab Topic Exchang", routing_key=routingKey, body=message)
     
